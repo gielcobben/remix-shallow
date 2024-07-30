@@ -5,7 +5,7 @@ import {
   CSSProperties,
   MouseEvent,
   useCallback,
-  useLayoutEffect,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -63,8 +63,7 @@ export default function Index() {
         JSON.stringify({ offset, measurementsCache })
       );
 
-      // If you comment this out, it works.
-      // history.pushState(null, "", `/posts/${item.id}`);
+      history.pushState(null, "", `/posts/${item.id}`);
 
       setPost(item);
 
@@ -73,7 +72,11 @@ export default function Index() {
     [rowVirtualizer.measurementsCache, rowVirtualizer.scrollOffset, setPost]
   );
 
-  useLayoutEffect(() => {
+  const closePost = useCallback(() => {
+    history.back();
+  }, []);
+
+  useEffect(() => {
     if (!post) {
       const scrollSettings = sessionStorage.getItem("scroll-settings");
 
@@ -88,7 +91,7 @@ export default function Index() {
     }
   }, [post, rowVirtualizer]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     function handlePopState() {
       setPost(null);
     }
@@ -145,7 +148,7 @@ export default function Index() {
         style={post ? undefined : hiddenStyle}
         className="flex items-center justify-center min-h-[calc(100dvh-200px)]"
       >
-        <button onClick={() => setPost(null)}>Back</button>
+        <button onClick={closePost}>Back</button>
       </article>
     </div>
   );
@@ -165,7 +168,7 @@ function GridItem({
       <Link
         onClick={(event) => setPost(event, item)}
         to={`/posts/${item.id}`}
-        className="rounded-xl"
+        className="rounded-xl block size-full flex items-center justify-center"
       >
         {item.title}
       </Link>
