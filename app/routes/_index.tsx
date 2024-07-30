@@ -83,8 +83,6 @@ export default function Index() {
       if (scrollSettings) {
         const { offset, measurementsCache } = JSON.parse(scrollSettings);
 
-        console.log(`scrolling to offset ${offset}`);
-
         rowVirtualizer.measurementsCache = measurementsCache;
         rowVirtualizer.scrollToOffset(offset);
       }
@@ -146,9 +144,15 @@ export default function Index() {
 
       <article
         style={post ? undefined : hiddenStyle}
-        className="flex items-center justify-center min-h-[calc(100dvh-200px)]"
+        className="flex items-center justify-center flex-col min-h-[calc(100dvh-200px)]"
       >
-        <button onClick={closePost}>Back</button>
+        <div
+          className="size-52"
+          style={{ backgroundColor: post?.backgroundColor }}
+        />
+        <button onClick={closePost} className="underline">
+          Close {post?.title}
+        </button>
       </article>
     </div>
   );
@@ -168,7 +172,7 @@ function GridItem({
       <Link
         onClick={(event) => setPost(event, item)}
         to={`/posts/${item.id}`}
-        className="rounded-xl block size-full flex items-center justify-center"
+        className="rounded-xl size-full flex items-center justify-center"
       >
         {item.title}
       </Link>
